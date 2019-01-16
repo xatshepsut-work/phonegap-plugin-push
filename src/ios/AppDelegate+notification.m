@@ -53,6 +53,9 @@ static char coldstartKey;
 
 - (AppDelegate *)pushPluginSwizzledInit
 {
+    UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+    center.delegate = self;
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createNotificationChecker:)
                                                  name:UIApplicationDidFinishLaunchingNotification
@@ -94,6 +97,12 @@ static char coldstartKey;
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
     PushPlugin *pushHandler = [self getCommandInstance:@"PushNotification"];
     [pushHandler didFailToRegisterForRemoteNotificationsWithError:error];
+}
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+    NSLog( @"NotificationCenter: Handle notification in foreground" );
+
+    completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound);
 }
 
 - (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
