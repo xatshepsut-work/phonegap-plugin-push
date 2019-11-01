@@ -190,14 +190,9 @@ NSString *const pushPluginApplicationDidBecomeActiveNotification = @"pushPluginA
        willPresentNotification:(UNNotification *)notification
          withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
-    NSLog( @"NotificationCenter Handle push from foreground" );
-    // custom code to handle push while app is in the foreground
-    PushPlugin *pushHandler = [self getCommandInstance:@"PushNotification"];
-    pushHandler.notificationMessage = notification.request.content.userInfo;
-    pushHandler.isInline = YES;
-    [pushHandler notificationReceived];
+    NSLog( @"NotificationCenter: Handle notification in foreground" );
 
-    completionHandler(UNNotificationPresentationOptionNone);
+    completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionSound);
 }
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center
